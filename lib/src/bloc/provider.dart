@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:crudfirebase/src/pages/bloc/login_bloc.dart';
-export 'package:crudfirebase/src/pages/bloc/login_bloc.dart';
+import 'package:crudfirebase/src/bloc/login_bloc.dart';
+export 'package:crudfirebase/src/bloc/login_bloc.dart';
 
 // Vas a ser mi in personalizado
 // Puede llamarse de diferente forma,

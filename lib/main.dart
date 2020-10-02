@@ -1,5 +1,6 @@
+import 'package:crudfirebase/src/pages/produdcto_page.dart';
 import 'package:flutter/material.dart';
-import 'package:crudfirebase/src/pages/bloc/provider.dart';
+import 'package:crudfirebase/src/bloc/provider.dart';
 import 'package:crudfirebase/src/pages/home_page.dart';
 import 'package:crudfirebase/src/pages/login_page.dart';
 
@@ -12,10 +13,11 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Form Validation - Bloc',
-          initialRoute: 'login',
+          initialRoute: 'home',
           routes: {
             'login': (BuildContext context) => LoginPage(),
             'home': (BuildContext context) => HomePage(),
+            'producto': (BuildContext context) => ProductPage(),
           },
           theme: ThemeData(primaryColor: Colors.deepPurple)),
     );

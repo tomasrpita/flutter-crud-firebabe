@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:crudfirebase/src/pages/bloc/provider.dart';
+import 'package:crudfirebase/src/bloc/provider.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -9,17 +9,17 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Home Page'),
       ),
-      body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Email: ${bloc.email}'),
-            Divider(),
-            Text('Password ${bloc.password}')
-          ],
-        ),
-      ),
+      body: Container(),
+      floatingActionButton: _crearBoton(context),
     );
+  }
+
+  _crearBoton(BuildContext context) {
+    return FloatingActionButton(
+        backgroundColor: Colors.deepPurple,
+        child: Icon(
+          Icons.add,
+        ),
+        onPressed: () => Navigator.pushNamed(context, 'producto'));
   }
 }

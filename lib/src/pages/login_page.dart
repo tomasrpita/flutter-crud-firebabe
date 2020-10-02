@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:crudfirebase/src/pages/bloc/provider.dart';
+import 'package:crudfirebase/src/bloc/provider.dart';
 
 class LoginPage extends StatelessWidget {
   @override
