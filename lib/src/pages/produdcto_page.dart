@@ -1,3 +1,4 @@
+import 'package:crudfirebase/src/provider/productos_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:crudfirebase/src/models/producto_model.dart';
 import 'package:crudfirebase/src/utils/utils.dart' as utils;
@@ -9,6 +10,7 @@ class ProductPage extends StatefulWidget {
 
 class _ProductPageState extends State<ProductPage> {
   final formKey = GlobalKey<FormState>();
+  final productosProvider = new ProductosProvider();
 
   ProductoModel producto = new ProductoModel();
 
@@ -91,6 +93,7 @@ class _ProductPageState extends State<ProductPage> {
     print(producto.titulo);
     print(producto.valor);
     print(producto.disponible);
+    productosProvider.crearProducto(producto);
   }
 
   _crearDisponible() {
