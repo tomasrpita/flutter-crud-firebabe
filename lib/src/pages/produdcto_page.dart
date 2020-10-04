@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:crudfirebase/src/models/producto_model.dart';
 import 'package:crudfirebase/src/utils/utils.dart' as utils;
 
-class ProductPage extends StatelessWidget {
+class ProductPage extends StatefulWidget {
+  @override
+  _ProductPageState createState() => _ProductPageState();
+}
+
+class _ProductPageState extends State<ProductPage> {
   final formKey = GlobalKey<FormState>();
+
+  ProductoModel producto = new ProductoModel();
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +30,12 @@ class ProductPage extends StatelessWidget {
           child: Form(
             key: formKey,
             child: Column(
-              children: [_crearNombre(), _crearPrecio(), _crearBoton()],
+              children: [
+                _crearNombre(),
+                _crearPrecio(),
+                _crearDisponible(),
+                _crearBoton()
+              ],
             ),
           ),
         ),
@@ -32,8 +45,10 @@ class ProductPage extends StatelessWidget {
 
   Widget _crearNombre() {
     return TextFormField(
+      initialValue: producto.titulo,
       textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(labelText: 'Producto'),
+      onSaved: (newValue) => producto.titulo = newValue,
       validator: (value) =>
           value.length > 3 ? null : 'ingrese el nombre del producto',
     );
@@ -41,8 +56,10 @@ class ProductPage extends StatelessWidget {
 
   Widget _crearPrecio() {
     return TextFormField(
+      initialValue: producto.valor.toString(),
       keyboardType: TextInputType.numberWithOptions(decimal: true),
       decoration: InputDecoration(labelText: 'Precio'),
+      onSaved: (newValue) => producto.valor = double.parse(newValue),
       validator: (value) {
         if (utils.isNumeric(value)) {
           return null;
@@ -70,5 +87,20 @@ class ProductPage extends StatelessWidget {
 
     // Todas las instrucciones si es valido
     print('Ok');
+    formKey.currentState.save();
+    print(producto.titulo);
+    print(producto.valor);
+    print(producto.disponible);
+  }
+
+  _crearDisponible() {
+    return SwitchListTile(
+      value: producto.disponible,
+      title: Text('Disponible'),
+      onChanged: (newValue) => setState(() {
+        producto.disponible = newValue;
+      }),
+      activeColor: Colors.deepPurple,
+    );
   }
 }
