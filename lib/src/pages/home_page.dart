@@ -3,8 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:crudfirebase/src/bloc/provider.dart';
 import 'package:crudfirebase/src/models/producto_model.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final productosProvider = new ProductosProvider();
+
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of(context);
@@ -54,7 +60,8 @@ class HomePage extends StatelessWidget {
       child: ListTile(
         title: Text('${producto.titulo} - ${producto.valor}'),
         subtitle: Text('${producto.id}'),
-        onTap: () => Navigator.pushNamed(context, 'producto'),
+        onTap: () =>
+            Navigator.pushNamed(context, 'producto', arguments: producto),
       ),
     );
   }
