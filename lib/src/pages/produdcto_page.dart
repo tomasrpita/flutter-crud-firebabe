@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:crudfirebase/src/provider/productos_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:crudfirebase/src/models/producto_model.dart';
 import 'package:crudfirebase/src/utils/utils.dart' as utils;
+import 'package:image_picker/image_picker.dart';
 
 class ProductPage extends StatefulWidget {
   @override
@@ -10,9 +13,14 @@ class ProductPage extends StatefulWidget {
 
 class _ProductPageState extends State<ProductPage> {
   final formKey = GlobalKey<FormState>();
+  final scaffoldKey = GlobalKey<ScaffoldState>();
   final productosProvider = new ProductosProvider();
 
   ProductoModel producto = new ProductoModel();
+
+  bool _guardando = false;
+
+  PickedFile foto;
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +29,16 @@ class _ProductPageState extends State<ProductPage> {
       producto = prodData;
     }
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         title: Text('Producto'),
         actions: [
           IconButton(
-              icon: Icon(Icons.photo_size_select_actual), onPressed: () {}),
+              icon: Icon(Icons.photo_size_select_actual),
+              onPressed: () => _procesarImagen(ImageSource.gallery)),
           IconButton(
-              icon: Icon(Icons.photo_size_select_actual), onPressed: () {})
+              icon: Icon(Icons.photo_size_select_actual),
+              onPressed: () => _procesarImagen(ImageSource.camera))
         ],
       ),
       body: SingleChildScrollView(
@@ -37,6 +48,7 @@ class _ProductPageState extends State<ProductPage> {
             key: formKey,
             child: Column(
               children: [
+                _mostrarFoto(),
                 _crearNombre(),
                 _crearPrecio(),
                 _crearDisponible(),
@@ -80,11 +92,22 @@ class _ProductPageState extends State<ProductPage> {
     return RaisedButton.icon(
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-        onPressed: _submit,
+        onPressed: (_guardando) ? null : _submit,
         textColor: Colors.white,
         color: Colors.deepPurple,
         icon: Icon(Icons.save),
         label: Text('Guardar'));
+  }
+
+  Widget _crearDisponible() {
+    return SwitchListTile(
+      value: producto.disponible,
+      title: Text('Disponible'),
+      activeColor: Colors.deepPurple,
+      onChanged: (value) => setState(() {
+        producto.disponible = value;
+      }),
+    );
   }
 
   void _submit() {
@@ -94,24 +117,54 @@ class _ProductPageState extends State<ProductPage> {
     // Todas las instrucciones si es valido
     print('Ok');
     formKey.currentState.save();
-    print(producto.titulo);
-    print(producto.valor);
-    print(producto.disponible);
+    // print(producto.titulo);
+    // print(producto.valor);
+    // print(producto.disponible);
+
     if (producto.id == null) {
       productosProvider.crearProducto(producto);
     } else {
       productosProvider.editarProducto(producto);
     }
+    // setState(() {
+    //   _guardando = true;
+    // });
+    mostrarSnackBar('Producto Guardado');
+    // Navigator.pop(context);
   }
 
-  _crearDisponible() {
-    return SwitchListTile(
-      value: producto.disponible,
-      title: Text('Disponible'),
-      onChanged: (newValue) => setState(() {
-        producto.disponible = newValue;
-      }),
-      activeColor: Colors.deepPurple,
+  void mostrarSnackBar(String mensaje) {
+    final snackbar = SnackBar(
+      content: Text(mensaje),
+      duration: Duration(milliseconds: 1500),
     );
+    _guardando = false;
+    scaffoldKey.currentState.showSnackBar(snackbar);
+  }
+
+  Widget _mostrarFoto() {
+    if (producto.fotoUrl != null) {
+      // TODO: tengo que hacer esto
+      return Container();
+    } else {
+      return Image(
+        // Si la fotografia tiene un path mostrar ese path sino usa el siguiente
+        // valor
+        image: AssetImage(foto?.path ?? 'assets/no-image.png'),
+        height: 300,
+        fit: BoxFit.cover,
+      );
+    }
+  }
+
+  _procesarImagen(ImageSource source) async {
+    final _picker = ImagePicker();
+    foto = await _picker.getImage(source: source);
+
+    if (foto != null) {
+      // limpieza
+    }
+
+    setState(() {});
   }
 }
