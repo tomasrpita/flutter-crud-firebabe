@@ -1,5 +1,7 @@
 import 'dart:convert';
-
+import 'dart:io';
+import 'package:mime_type/mime_type.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:crudfirebase/src/models/producto_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -56,5 +58,33 @@ class ProductosProvider {
 
     print(decodeData);
     return true;
+  }
+
+  Future<String> subirImagen(File imagen) async {
+    final url = Uri.parse(
+        'https://api.cloudinary.com/v1_1/dx2li0ome/image/upload?upload_preset=hrzls9ta');
+    final mimeType = mime(imagen.path).split('/'); //image/jpg
+
+    final imageUploadRequest = http.MultipartRequest('Post', url);
+
+    final file = await http.MultipartFile.fromPath('file', imagen.path,
+        contentType: MediaType(mimeType[0], mimeType[1]));
+
+    imageUploadRequest.files.add(file);
+
+    final streamResponse = await imageUploadRequest.send();
+
+    final resp = await http.Response.fromStream(streamResponse);
+
+    if (resp.statusCode != 200 && resp.statusCode != 201) {
+      print('Algo salio mal');
+      print(resp.body);
+      return null;
+    }
+
+    final respData = json.decode(resp.body);
+    print(respData);
+
+    return respData['secure_url'];
   }
 }
