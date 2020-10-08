@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import 'package:mime_type/mime_type.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:crudfirebase/src/models/producto_model.dart';
@@ -60,7 +61,7 @@ class ProductosProvider {
     return true;
   }
 
-  Future<String> subirImagen(File imagen) async {
+  Future<String> subirImagen(PickedFile imagen) async {
     final url = Uri.parse(
         'https://api.cloudinary.com/v1_1/dx2li0ome/image/upload?upload_preset=hrzls9ta');
     final mimeType = mime(imagen.path).split('/'); //image/jpg

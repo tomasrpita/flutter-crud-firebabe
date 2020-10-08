@@ -108,7 +108,7 @@ class _ProductPageState extends State<ProductPage> {
     );
   }
 
-  void _submit() {
+  void _submit() async {
     // Si no es valido
     if (!formKey.currentState.validate()) return;
 
@@ -119,16 +119,21 @@ class _ProductPageState extends State<ProductPage> {
     // print(producto.valor);
     // print(producto.disponible);
 
+    setState(() {
+      _guardando = true;
+    });
+
+    if (foto != null) {
+      producto.fotoUrl = await productosProvider.subirImagen(foto);
+    }
+
     if (producto.id == null) {
       productosProvider.crearProducto(producto);
     } else {
       productosProvider.editarProducto(producto);
     }
-    // setState(() {
-    //   _guardando = true;
-    // });
     mostrarSnackBar('Producto Guardado');
-    // Navigator.pop(context);
+    Navigator.pop(context);
   }
 
   void mostrarSnackBar(String mensaje) {
